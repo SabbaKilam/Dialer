@@ -1,3 +1,10 @@
+/*
+//========= "better"  select alternitive with Jquery=====
+$(document).bind('mobileinit',function(){
+  $.mobile.selectmenu.prototype.options.nativeMenu = false;
+});
+//===================================
+*/
 var select = document.getElementById('select');
 //data
 var arrayOfPhoneNumbers = [];
@@ -7,12 +14,20 @@ var ajax = new XMLHttpRequest();
 ajax.onload = function(){
   if(ajax.status === 200 || ajax.status === 0){
     arrayOfPhoneNumbers = ajax.responseText.split("\r");
+    for (var i = 1; i<arrayOfPhoneNumbers.length; i++){
+      arrayOfPhoneNumbers[i-1] = arrayOfPhoneNumbers[i];    
+    }
+    arrayOfPhoneNumbers.pop();
+    
+    arrayOfPhoneNumbers.sort();
   //fill the select object with phone number options
     select.innerHTML = "";
     var record = [];
-    for(var i = 1; i< arrayOfPhoneNumbers.length; i++){
+    for(var i = 0; i< arrayOfPhoneNumbers.length; i++){
       //get a record and slpit it up
       record = arrayOfPhoneNumbers[i].split(",");
+      
+
       //join first name and last name
       var name = record[0] + " " + record[1];
       //create text node for the option element
@@ -32,18 +47,17 @@ ajax.onload = function(){
 select.onchange = function(){
   try{
     var i = select.selectedIndex;
-    alert(select.options[i].value);
+    location.assign("tel:" + select.options[i].value) ;
   }catch(e){}
 }
 
 select.ondblclick = function(){
-  var i = select.selectedIndex;
-  alert(select.options[i].value);
-  //document.location.href = "tel:" + select.options[i].innerHTML;
+    var i = select.selectedIndex;
+    location.assign("tel:" + select.options[i].value) ;
 }
 
 //activities
-var doc = "http://dl.dropboxusercontent.com/u/92537132/Mobiles%20Apps/QuickEmailApp/PhoneNumbers.csv"
+var doc = "http://dl.dropboxusercontent.com/u/21142484/.Mobile.Apps/.Final.Weeks/Dialer/PhoneNumbers.csv"
 ajax.open("GET",doc,true);
 ajax.send();
 
